@@ -63,6 +63,7 @@ class Movies extends Component {
       pageSize,
       selectedGenre,
       currentPage,
+      sort,
       movies: allMovies,
     } = this.state;
 
@@ -77,7 +78,7 @@ class Movies extends Component {
 
     return (
       <div className="row">
-        <div className="col-2">
+        <div className="col-2 m-2">
           <ListGroup
             items={this.state.genres}
             selectedItem={this.state.selectedGenre}
@@ -87,10 +88,11 @@ class Movies extends Component {
           />
         </div>
 
-        <div className="col">
+        <div className="col m-2">
           <p>Showing {filtered.length} movies in the database.</p>
           <MovieTable
             movies={movies}
+            sort={sort}
             onLike={this.handleLike}
             onDelete={this.handleDelete}
             onSort={this.handleSort}

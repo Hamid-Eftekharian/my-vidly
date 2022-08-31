@@ -1,13 +1,21 @@
 import React, { Component } from "react";
 
 class LoginForm extends Component {
-  state = {};
+  users = React.createRef();
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const username = this.username.current.value;
+    console.log("Submitted");
+  };
   render() {
     return (
-      <form>
+      <form onSubmit={this.handleSubmit}>
         <div className="form-group">
           <label htmlfor="exampleInputEmail1">Email address</label>
           <input
+            autofocus
+            ref={this.username}
             type="email"
             className="form-control"
             id="exampleInputEmail1"

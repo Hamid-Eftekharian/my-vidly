@@ -1,47 +1,62 @@
 import React, { Component } from "react";
+import Input from "./common/input";
 
 class LoginForm extends Component {
-  users = React.createRef();
+  state = {
+    accounts: { username: "", password: "" },
+    errors: {},
+  };
+
+  validate = () => {
+    const errors = {};
+
+    if (this.state.accounts.username.trim() === "")
+      errors.username = "Username is required.";
+    if (this.state.accounts.password.trim() === "")
+      errors.password = "Password is required.";
+
+    return Object.keys(errors).length === 0 ? null : errors;
+  };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const username = this.username.current.value;
-    console.log("Submitted");
+
+    const errors = this.validate();
+    this.setState({ errors: errors || {} });
+    if (errors) return console.log(errors);
   };
+
+  handleChange = (e) => {
+    const accounts = this.state.accounts;
+    accounts[e.currentTarget.name] = e.currentTarget.value;
+    this.setState({ accounts });
+  };
+
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <div className="form-group">
-          <label htmlfor="exampleInputEmail1">Email address</label>
-          <input
-            autofocus
-            ref={this.username}
-            type="email"
-            className="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-          />
-          <small id="emailHelp" className="form-text text-muted">
-            We'll never share your email with anyone else.
-          </small>
-        </div>
-        <div className="form-group">
-          <label htmlfor="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            className="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-          />
-        </div>
+        <Input
+          name="username"
+          value={this.state.accounts.username}
+          label="Username"
+          onChange={this.handleChange}
+          error={this.state.errors.username}
+        />
+        <Input
+          name="password"
+          value={this.state.accounts.password}
+          label="Password"
+          onChange={this.handleChange}
+          error={this.state.errors.password}
+        />
+
         <div className="form-group form-check">
           <input
             type="checkbox"
             className="form-check-input"
             id="exampleCheck1"
           />
-          <label className="form-check-label" htmlfor="exampleCheck1">
+          <label className="form-check-label" htmlFor="exampleCheck1">
             Check me out
           </label>
         </div>

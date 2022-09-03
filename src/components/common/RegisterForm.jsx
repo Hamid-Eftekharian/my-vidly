@@ -2,15 +2,16 @@ import Joi from "joi-browser";
 import React, { Component } from "react";
 import Input from "./common/input";
 
-class LoginForm extends Component {
+class RegisterForm extends Component {
   state = {
-    accounts: { username: "", password: "" },
+    accounts: { username: "", password: "", name: "" },
     errors: {},
   };
 
   schema = {
-    username: Joi.string().required().label("Username"),
-    password: Joi.string().required().label("Passwordoo"),
+    username: Joi.string().required().email().label("Username"),
+    password: Joi.string().required().min(5).label("Passwordoo"),
+    name: Joi.required().label("Namoo"),
   };
 
   validate = () => {
@@ -72,6 +73,13 @@ class LoginForm extends Component {
           onChange={this.handleChange}
           error={this.state.errors.password}
         />
+        <Input
+          name="name"
+          value={this.state.accounts.name}
+          label="Name"
+          onChange={this.handleChange}
+          error={this.state.errors.name}
+        />
 
         <div className="form-group form-check">
           <input
@@ -88,11 +96,11 @@ class LoginForm extends Component {
           type="submit"
           className="btn btn-primary"
         >
-          Login
+          Register
         </button>
       </form>
     );
   }
 }
 
-export default LoginForm;
+export default RegisterForm;

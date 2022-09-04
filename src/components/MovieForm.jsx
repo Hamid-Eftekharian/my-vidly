@@ -1,9 +1,8 @@
 import React, { Component } from "react";
-import { getMovie } from "./../services/fakeMovieService";
+import { getMovie, saveMovie } from "./../services/fakeMovieService";
 import Joi from "joi-browser";
 import Input from "./common/input";
 import { getGenres } from "../services/fakeGenreService";
-import { genres } from "./../services/fakeGenreService";
 
 class MovieForm extends Component {
   state = {
@@ -18,18 +17,18 @@ class MovieForm extends Component {
   };
 
   schema = {
-    title: Joi.string().required().label("Title"),
-    genre: Joi.stirng().required().label("Genre"),
+    title: Joi.required().label("Title"),
+    genre: Joi.string().required().label("Genre"),
     numberInStock: Joi.number().required().min(0).max(100).label("Stock"),
     dailyRentalRate: Joi.number().required().min(0).max(100).label("Rate"),
   };
 
   componentDidMount = () => {
     const movie = this.state.movie;
-    if (props) {
+    if (this.props.match.params.id) {
       let movieSpec = getMovie(this.props.match.params.id);
       movie.title = movieSpec.title;
-      movie.genres = movieSpec.genre.name;
+      movie.genre = movieSpec.genre.name;
       movie.numberInStock = movieSpec.numberInStock;
       movie.dailyRentalRate = movieSpec.dailyRentalRate;
       this.setState({ movie });
@@ -60,7 +59,7 @@ class MovieForm extends Component {
 
     const errors = this.validate();
     this.setState({ errors: errors || {} });
-    if (errors) return console.log(errors);
+    saveMovie(this.state.movie);
   };
 
   validateProperty = ({ name, value }) => {
@@ -78,7 +77,7 @@ class MovieForm extends Component {
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
 
-    const movie = this.state.accounts;
+    const movie = this.state.movie;
     movie[input.name] = input.value;
     this.setState({ movie, errors });
   };
@@ -118,7 +117,7 @@ class MovieForm extends Component {
           />
 
           <button
-            className="btn btn-promary"
+            className="btn btn-primary m-2"
             onClick={() => this.props.history.push("/movies")}
           >
             Save Movie
